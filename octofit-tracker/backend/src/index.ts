@@ -1,6 +1,5 @@
 import express from 'express';
 import cors from 'cors';
-import { connect } from 'mongoose';
 import dotenv from 'dotenv';
 import usersRouter from './routes/users.js';
 import teamsRouter from './routes/teams.js';
@@ -8,6 +7,7 @@ import activitiesRouter from './routes/activities.js';
 import leaderboardRouter from './routes/leaderboard.js';
 import workoutsRouter from './routes/workouts.js';
 import { getApiBaseUrl } from './config/baseUrl.js';
+import { connectDB } from './config/database.js';
 
 dotenv.config();
 
@@ -18,19 +18,7 @@ const PORT = 8000;
 app.use(cors());
 app.use(express.json());
 
-// MongoDB connection
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/octofit_db';
 const BASE_URL = getApiBaseUrl(PORT);
-
-async function connectDB() {
-  try {
-    await connect(MONGODB_URI);
-    console.log('MongoDB connected successfully');
-  } catch (error) {
-    console.error('MongoDB connection error:', error);
-    process.exit(1);
-  }
-}
 
 // Routes
 app.get('/health', (req, res) => {
